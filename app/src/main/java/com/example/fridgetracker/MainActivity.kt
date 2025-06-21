@@ -8,45 +8,26 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import androidx.lifecycle.ViewModelProvider
 import com.example.fridgetracker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var contentsViewModel: ContentsViewModel
-    private lateinit var fridgeContents: ArrayList<String>
-    private lateinit var fridgeContentsAdapter: ArrayAdapter<String>
-    private lateinit var itemList: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        contentsViewModel = ViewModelProvider(this)[ContentsViewModel::class.java]
-
         setSupportActionBar(binding.toolbar)
-
-        itemList = findViewById<ListView>(R.id.list)
-
-        fridgeContents = ArrayList<String>()
-        fridgeContentsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, fridgeContents)
-        itemList.setAdapter(fridgeContentsAdapter)
-        fridgeContentsAdapter.add("Item 1")  // Replace with item added via dialogue
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            NewItemSheet().show(supportFragmentManager, "newContentTag")
-        }
-
-        contentsViewModel.name.observe(this){
+            NewItemSheet(null).show(supportFragmentManager, "newContentTag")
         }
     }
 

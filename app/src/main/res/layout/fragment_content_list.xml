@@ -6,17 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ContentList">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:id="@+id/contentListRecyclerView"
+        android:backgroundTint="@color/design_default_color_background"/>
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/list"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
