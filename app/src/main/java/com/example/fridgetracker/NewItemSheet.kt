@@ -24,6 +24,7 @@ class NewItemSheet(var contentItem: ContentItem?) : BottomSheetDialogFragment() 
 
         if (contentItem != null){
             binding.contentTitle.text = "Edit Item"
+            binding.addItemButton.text = "Update"
             val editable = Editable.Factory.getInstance()
             binding.name.text = editable.newEditable(contentItem!!.name)
             if (contentItem!!.expiryDate() != null){

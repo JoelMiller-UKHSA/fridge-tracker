@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fridgetracker.databinding.FragmentContentListBinding
 
-class ContentList : Fragment() {
+class ContentList : Fragment(), ContentItemClickListener {
 
     private lateinit var binding: FragmentContentListBinding
     private val contentsViewModel: ContentsViewModel by viewModels {
@@ -34,8 +34,12 @@ class ContentList : Fragment() {
         contentsViewModel.contentItems.observe(viewLifecycleOwner){
             binding.contentListRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
-                adapter = ContentItemAdapter(it)
+                adapter = ContentItemAdapter(it, mainActivity)
             }
         }
+    }
+
+    override fun editContentItem(contentItem: ContentItem) {
+        NewItemSheet(contentItem).show(requireActivity().supportFragmentManager, "newContentTag")
     }
 }
