@@ -32,7 +32,15 @@
             android:hint="Name"/>
 
     </com.google.android.material.textfield.TextInputLayout>
-    
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:text="Expiry Date"
+        android:id="@+id/expiry_date_button"/>
+
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
