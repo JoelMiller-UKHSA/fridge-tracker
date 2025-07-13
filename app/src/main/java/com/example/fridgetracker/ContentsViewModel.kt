@@ -15,6 +15,7 @@ class ContentsViewModel: ViewModel() {
     fun addContentItem(newContent: ContentItem){
         val list = contentItems.value
         list!!.add(newContent)
+        list.sortBy { it.expiryDate }
         contentItems.postValue(list)
     }
 
