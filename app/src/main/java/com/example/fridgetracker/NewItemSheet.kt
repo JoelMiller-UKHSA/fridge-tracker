@@ -6,8 +6,7 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.fridgetracker.databinding.FragmentNewItemSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDate
@@ -15,24 +14,23 @@ import java.util.Locale
 
 class NewItemSheet(var contentItem: ContentItem?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewItemSheetBinding
-    private lateinit var contentsViewModel: ContentsViewModel
+    private val contentsViewModel : ContentsViewModel by viewModels {
+        ContentItemModelFactory((requireActivity().application as FridgeTrackerApplication).repository)
+    }
     private var expiryDate: LocalDate? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = requireActivity()
 
         if (contentItem != null){
             binding.contentTitle.text = "Edit Item"
             val editable = Editable.Factory.getInstance()
             binding.name.text = editable.newEditable(contentItem!!.name)
-            if (contentItem!!.expiryDate != null){
-                expiryDate = contentItem!!.expiryDate!!
+            if (contentItem!!.expiryDate() != null){
+                expiryDate = contentItem!!.expiryDate()!!
                 updateDateButtonText()
             }
         }
-
-        contentsViewModel = ViewModelProvider(activity)[ContentsViewModel::class.java]
         binding.addItemButton.setOnClickListener {
             saveAction()
         }
@@ -68,11 +66,14 @@ class NewItemSheet(var contentItem: ContentItem?) : BottomSheetDialogFragment() 
 
     private fun saveAction(){
         val name = binding.name.text.toString()
+        val expiryDateString = if (expiryDate == null) null else ContentItem.dataFormatter.format(expiryDate)
         if (contentItem == null){
-            val newContent = ContentItem(name, expiryDate)
+            val newContent = ContentItem(name, expiryDateString)
             contentsViewModel.addContentItem(newContent)
         } else {
-            contentsViewModel.updateContentItem(contentItem!!.id, name, expiryDate)
+            contentItem!!.name = name
+            contentItem!!.expiryDateString = expiryDateString
+            contentsViewModel.updateContentItem(contentItem!!)
         }
         binding.name.setText("")
         dismiss()

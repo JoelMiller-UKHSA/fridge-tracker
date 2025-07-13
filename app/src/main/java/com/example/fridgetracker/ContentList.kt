@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fridgetracker.databinding.FragmentContentListBinding
 
 class ContentList : Fragment() {
 
     private lateinit var binding: FragmentContentListBinding
-    private lateinit var contentsViewModel: ContentsViewModel
+    private val contentsViewModel: ContentsViewModel by viewModels {
+        ContentItemModelFactory((requireActivity().application as FridgeTrackerApplication).repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,8 +26,6 @@ class ContentList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = requireActivity()
-        contentsViewModel = ViewModelProvider(activity)[ContentsViewModel::class.java]
         setRecyclerView()
     }
 

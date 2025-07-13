@@ -13,6 +13,6 @@ class ContentItemViewHolder(
     private val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy")
     fun bindContentItem(contentItem: ContentItem){
         binding.name.text = contentItem.name
-        binding.expiryTime.text = dateFormat.format(contentItem.expiryDate)
+        binding.expiryTime.text = dateFormat.format(contentItem.expiryDate())
     }
 }

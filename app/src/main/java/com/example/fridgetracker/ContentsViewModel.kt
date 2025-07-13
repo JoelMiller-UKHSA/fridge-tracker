@@ -1,29 +1,28 @@
 package com.example.fridgetracker
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import java.time.LocalDate
-import java.util.UUID
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class ContentsViewModel: ViewModel() {
-    var contentItems = MutableLiveData<MutableList<ContentItem>>()
+class ContentsViewModel(private val repository: ContentItemRepository): ViewModel() {
+    var contentItems: LiveData<List<ContentItem>> = repository.allContentItems.asLiveData()
 
-    init {
-        contentItems.value = mutableListOf()
+    fun addContentItem(newContent: ContentItem) = viewModelScope.launch {
+        repository.insertContentItem(newContent)
     }
-
-    fun addContentItem(newContent: ContentItem){
-        val list = contentItems.value
-        list!!.add(newContent)
-        list.sortBy { it.expiryDate }
-        contentItems.postValue(list)
+    fun updateContentItem(contentItem: ContentItem) = viewModelScope.launch {
+        repository.updateContentItem(contentItem)
     }
+}
 
-    fun updateContentItem(id: UUID, name: String, expiryDate: LocalDate?){
-        val list = contentItems.value
-        val content = list!!.find{it.id == id}!!
-        content.name = name
-        content.expiryDate = expiryDate
-        contentItems.postValue(list)
+class ContentItemModelFactory(private val repository: ContentItemRepository) : ViewModelProvider.Factory{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ContentsViewModel::class.java))
+            return ContentsViewModel(repository) as T
+
+        throw IllegalArgumentException("Unknown Class for View Model")
     }
 }
